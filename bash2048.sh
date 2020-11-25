@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 
+ 
 #important variables
 declare -ia board    # array that keeps track of game status
 declare -i pieces    # number of pieces present on board
