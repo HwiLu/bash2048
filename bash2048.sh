@@ -1,17 +1,18 @@
 #!/usr/bin/env bash
 
 #important variables
-declare -ia board    # array that keeps track of game status
-declare -i pieces    # number of pieces present on board
-declare -i score=0   # score variable
+declare -ia board    # array that keeps track of game status 定义保存游戏轨迹的数组
+declare -i pieces    # number of pieces present on board 声明pieces是个整数
+declare -i score=0   # score variable  分数
 declare -i flag_skip # flag that prevents doing more than one operation on
                      # single field in one step
 declare -i moves     # stores number of possible moves to determine if player lost 
                      # the game
+					 
 declare ESC=$'\e'    # escape byte
-declare header="Bash 2048 v1.1 (https://github.com/mydzor/bash2048)"
+declare header="Bash 2048 v1.1 (https://github.com/mydzor/bash2048)" # 声明变量并赋值。
 
-declare -i start_time=$(date +%s)
+declare -i start_time=$(date +%s) 
 
 #default config
 declare -i board_size=4
@@ -20,12 +21,20 @@ declare -i reload_flag=0
 declare config_dir="$HOME/.bash2048"
 
 #for colorizing numbers
-declare -a colors
+declare -a colors # 定义颜色赋值数组
+ 
+## declare命令是bash的一个内建命令，它可以用来声明shell变量，设置变量的属性（Declare variables and/or give them attributes）。该命令也可以写作typeset。
+## declare -a 定义数组
+## declare -i pieces 脚本余下的部分会把"pieces"当作整数看待.
+
+## 定义数字颜色		
 colors[2]=33         # yellow text
 colors[4]=32         # green text
 colors[8]=34         # blue text
 colors[16]=36        # cyan text
 colors[32]=35        # purple text
+
+# 定义背景色
 colors[64]="33m\033[7"        # yellow background
 colors[128]="32m\033[7"       # green background
 colors[256]="34m\033[7"       # blue background
@@ -33,6 +42,7 @@ colors[512]="36m\033[7"       # cyan background
 colors[1024]="35m\033[7"      # purple background
 colors[2048]="31m\033[7"      # red background (won with default target)
 
+##
 exec 3>/dev/null     # no logging by default
 
 trap "end_game 0 1" INT #handle INT signal
@@ -300,6 +310,7 @@ function end_game {
   exit 0
 }
 
+## 帮助函数
 function help {
   cat <<END_HELP
 Usage: $1 [-b INTEGER] [-t INTEGER] [-l FILE] [-r] [-h]
@@ -314,8 +325,10 @@ END_HELP
 }
 
 
-#parse commandline options
-while getopts "b:t:l:rh" opt; do
+#parse commandline options ## 解析命令行参数
+
+# 程序开始执行处
+while getopts "b:t:l:rh" opt; do # 使用getopts命令获取用户命令行参数；并将值存入变量ops
   case $opt in
     b ) board_size="$OPTARG"
       let '(board_size>=3)&(board_size<=9)' || {
