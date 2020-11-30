@@ -328,6 +328,7 @@ END_HELP
 #parse commandline options ## 解析命令行参数
 
 # 程序开始执行处
+# 获取命令行参数
 while getopts "b:t:l:rh" opt; do # 使用getopts命令获取用户命令行参数；并将值存入变量ops
   case $opt in
     b ) board_size="$OPTARG"
@@ -342,7 +343,7 @@ while getopts "b:t:l:rh" opt; do # 使用getopts命令获取用户命令行参�
         exit -1 
       };;
     r ) reload_flag="1";;
-    h ) help $0
+    h ) help $0 # $0用来表示要执行的shell脚本名称
         exit 0;;
     l ) exec 3>$OPTARG;;
     \?) printf "Invalid option: -"$opt", try $0 -h\n" >&2
@@ -352,12 +353,15 @@ while getopts "b:t:l:rh" opt; do # 使用getopts命令获取用户命令行参�
   esac
 done
 
+# 初始化游戏面板
 #init board
-let fields_total=board_size*board_size
-let index_max=board_size-1
+
+let fields_total=board_size*board_size # 总块数，一个数字就是一个块。
+let index_max=board_size-1  # 最大的数组索引值。
+
 for i in $(_seq 0 $fields_total); do board[$i]="0"; done
 let pieces=0
-generate_piece
+generate_piece  
 first_round=$last_added
 generate_piece
 
