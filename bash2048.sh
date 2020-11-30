@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-
+ 
 #important variables
 declare -ia board    # array that keeps track of game status 定义保存游戏轨迹的数组
 declare -i pieces    # number of pieces present on board 声明pieces是个整数
