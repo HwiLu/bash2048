@@ -48,6 +48,7 @@ exec 3>/dev/null     # no logging by default
 trap "end_game 0 1" INT #handle INT signal
 
 #simplified replacement of seq command
+# _seq 函数
 function _seq {
   local cur=1
   local max
@@ -242,6 +243,7 @@ function key_react {
   }
 }
 
+# 保存游戏
 function save_game {
   rm -rf "$config_dir"
   mkdir "$config_dir"
@@ -254,6 +256,7 @@ function save_game {
   echo "$first_round" > "$config_dir/first_round"
 }
 
+# 重载游戏
 function reload_game {
   printf "Loading saved game...\n" >&3
 
@@ -272,6 +275,7 @@ function reload_game {
   index_max=board_size-1
 }
 
+# 结束游戏
 function end_game {
   # count game duration
   end_time=$(date +%s) 
@@ -342,8 +346,8 @@ while getopts "b:t:l:rh" opt; do # 使用getopts命令获取用户命令行参�
         printf "Invalid target, has to be power of two\n"
         exit -1 
       };;
-    r ) reload_flag="1";;
-    h ) help $0 # $0用来表示要执行的shell脚本名称
+    r ) reload_flag="1";; # 如果传入参数为r，则把reload_flag值设置为1.
+    h ) help $0           # $0用来表示要执行的shell脚本名称
         exit 0;;
     l ) exec 3>$OPTARG;;
     \?) printf "Invalid option: -"$opt", try $0 -h\n" >&2
@@ -366,8 +370,9 @@ first_round=$last_added
 generate_piece
 
 #load saved game if flag is set
-if test $reload_flag = "1"; then
-  reload_game
+# 加载被保存的游戏，如果有游戏被保存
+if test $reload_flag = "1"; then # 判断 reload_flag 是否为1 ，如果是，
+  reload_game # 重载游戏
 fi
 
 while true; do
